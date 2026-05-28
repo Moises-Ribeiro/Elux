@@ -1,0 +1,224 @@
+<template>
+    <lightning-card>
+        <div style="padding: 16px;">
+            <fieldset style="border: 1px solid #000000; padding: 16px; border-radius: 8px; margin: 4px 0;">
+                <legend style="font-weight: bold; color: #000000;">{labels.LWC_Informacion_de_la_Cuenta}</legend>
+                <div class="slds-grid slds-grid_vertical-align-start">
+                    <div class="slds-col slds-size_1-of-2">
+                        <div class="slds-col slds-size_1-of-2">
+                            <div style="display: flex; gap: 16px; align-items: center;">
+                                <lightning-input 
+                                    type="radio" 
+                                    label={labels.LWC_PersonaFisica}
+                                    data-name="persona" 
+                                    name="persona" 
+                                    value="pessoaFisica"
+                                    checked={ispersonaFisica}
+                                    onchange={handleInputChange}>
+                                </lightning-input>
+                                <lightning-input 
+                                    type="radio" 
+                                    label={labels.LWC_PersonaJuridica} 
+                                    name="persona" 
+                                    value="pessoaJuridica"
+                                    onchange={handleInputChange}>
+                                </lightning-input>
+                            </div>
+                        </div>
+                    </div> 
+                    <div class="slds-col slds-size_1-of-2">
+                        <lightning-input 
+                            type="checkbox" 
+                            label={labels.LWC_ResumenDelCaso} 
+                            name="casoResumido" 
+                            checked={casoResumido} 
+                            onchange={handleInputChange}>
+                        </lightning-input>
+                    </div>
+                </div>
+                <div class="slds-grid slds-grid_vertical-align-start">
+                    <div class="slds-col slds-size_1-of-2">
+                        <lightning-combobox if:true={ispersonaFisica}
+                                label={labels.LWC_Tratamento} 
+                                name="salutation" 
+                                data-name="Salutation"
+                                value={Account.Salutation} 
+                                options={salutationOptions} 
+                                onchange={handleInputChange}>
+                        </lightning-combobox>
+                        <div class="slds-grid slds-gutters" if:true={ispersonaFisica}>
+                            <div class="slds-col slds-size_1-of-2">
+                                <lightning-input 
+                                    data-name="FirstName" 
+                                    label={labels.LWC_Nombre}
+                                    name="firstName" 
+                                    value={Account.FirstName} 
+                                    class="required-field"
+                                    required="true"
+                                    onblur={validateRequiredFieldNome}
+                                    onchange={handleInputChange}>
+                                </lightning-input>
+                            </div>
+                            <div class="slds-col slds-size_1-of-2">
+                                <lightning-input 
+                                    label={labels.LWC_Apelido}
+                                    name="lastName" 
+                                    data-name="LastName"
+                                    value={Account.LastName} 
+                                    class="required-field"
+                                    required="true"
+                                    onblur={validateRequiredFieldNome}
+                                    onchange={handleInputChange}>
+                                </lightning-input>
+                            </div>
+                        </div>
+                        <lightning-input if:true={ispersonaJuridica}  
+                            data-name="Name" 
+                            label={labels.LWC_Nombre}
+                            name="nome" 
+                            value={Account.Name} 
+                            class="required-field"
+                            required="true"
+                            onblur={validateRequiredFieldNome}
+                            onchange={handleInputChange}>
+                        </lightning-input>
+                        
+                        <div class="slds-grid slds-gutters">
+                            <div class="slds-col slds-size_1-of-2" if:true={ispersonaJuridica} >
+                                <lightning-input  
+                                    label={labels.LWC_Identificacion}
+                                    name="cnpj" 
+                                    value={Account.CNPJ__c}
+                                    data-name="CNPJ__c" 
+                                    onblur={validateRequiredFieldPJ}
+                                    class="required-field"
+                                    required="true"
+                                    onchange={handleInputChange}>
+                                </lightning-input>
+                            </div>
+                            <div class="slds-col slds-size_1-of-2" if:true={ispersonaFisica} >
+                                <lightning-input  
+                                    label={labels.LWC_Identificacion}
+                                    name="cpf" 
+                                    value={Account.CPF__c}
+                                    data-name="CPF__c" 
+                                    class="required-field"
+                                    required="true"
+                                    onblur={validateRequiredField}
+                                    onchange={handleInputChange}>
+                                </lightning-input>
+                            </div>
+                            <div class="slds-col slds-size_1-of-2" if:true={isphonewhatsapp}>
+                                <lightning-input  
+                                    label={labels.LWC_TelefonoWhatsapp}
+                                    name="phone" 
+                                    value={Account.Phone}
+                                    data-name="Phone"
+                                    class="required-field"
+                                    onblur={validateRequiredFieldPhone} 
+                                    required="true"
+                                    onchange={handleInputChange}>
+                                </lightning-input>
+                            </div>
+                        </div>
+                        <lightning-input if:true={isAgregateContat}
+                            type="checkbox" 
+                            label={labels.LWC_AgregarContato}
+                            name="contactAccount" 
+                            checked={contactAccount} 
+                            onchange={handleInputChange}>
+                        </lightning-input>
+                        <div style="padding: 16px;" if:true={contactAccount}>
+                            <div style="border: 1px solid #000000; padding: 16px; border-radius: 8px; margin: 4px 0;">
+                                <div class="slds-grid slds-gutters">
+                                    <div class="slds-col slds-size_1-of-2">
+                                        <lightning-input  
+                                            label={labels.LWC_TelefonoFixo}
+                                            name="telefoneFixo" 
+                                            data-name="Telefone_2__c"
+                                            value={Account.Telefone_2__c} 
+                                            onchange={handleInputChange}>
+                                        </lightning-input>
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-2">
+                                        <lightning-input  
+                                            label={labels.LWC_HablarCom} 
+                                            name="falarCom" 
+                                            value={Account.Falar_com__c} 
+                                            data-name="Falar_com__c"
+                                            onchange={handleInputChange}>
+                                        </lightning-input>
+                                    </div>
+                                </div>
+                                <div class="slds-grid slds-gutters">
+                                    <div class="slds-col slds-size_1-of-2" if:true={ispersonaJuridica}>
+                                        <lightning-input  
+                                            label={labels.LWC_Telefono3} 
+                                            name="telefone3" 
+                                            data-name="Telefone_3__c"
+                                            value={Account.Telefone_3__c} 
+                                            onchange={handleInputChange}>
+                                        </lightning-input>
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-2" if:false={ispersonaJuridica}>
+                                        <lightning-input  
+                                            label={labels.LWC_Account_Email}  
+                                            name="email" 
+                                            data-name="PersonEmail"
+                                            value={Account.PersonEmail} 
+                                            onchange={handleInputChange}>
+                                        </lightning-input>
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-2" if:true={ispersonaJuridica}>
+                                        <lightning-input  
+                                            label={labels.LWC_Account_Email}  
+                                            name="email" 
+                                            data-name="E_Mail__c"
+                                            value={Account.E_Mail__c} 
+                                            onchange={handleInputChange}>
+                                        </lightning-input>
+                                    </div>
+                                    <div class="slds-col slds-size_1-of-2" if:false={ispersonaJuridica}>
+                                        <lightning-input  
+                                            label={labels.LWC_Otro_Contacto} 
+                                            name="outroContato" 
+                                            data-name="PersonMobilePhone"
+                                            value={Account.PersonMobilePhone} 
+                                            onchange={handleInputChange}>
+                                        </lightning-input>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="slds-col slds-size_1-of-2">
+                        <template lwc:if={isAddressComponentLoading}>
+                            <div class="spinner">
+                                <lightning-spinner alternative-text={labels.GENERIC_LOADING} size="small"></lightning-spinner>
+                            </div>
+                        </template>
+                        <template lwc:else>
+                            <template if:true={isAddressFormatLikeBrazil}>
+                                <c-search-address
+                                    account={accountInfo}
+                                    onaddresschange={handleOnAddressChange}
+                                    current-stored-premise={currentStoredPremise}
+                                    account-info={accountInfo}
+                                ></c-search-address>
+                            </template>
+                            <template if:false={isAddressFormatLikeBrazil}>
+                                <c-custom-search-address
+                                    context="CustomCaseScreen"
+                                    account={accountInfo}
+                                    onaddresschange={handleOnAddressChange}
+                                    current-stored-premise={currentStoredPremise}
+                                    account-info={accountInfo}
+                                ></c-custom-search-address>
+                            </template>
+                        </template>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+    </lightning-card>
+</template>

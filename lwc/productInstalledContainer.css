@@ -1,0 +1,24 @@
+.lookup-label {
+    font-size: 0.75rem;
+    color: #444444;
+}
+
+.lookup-spacing {
+    height: 5px;
+    width: auto;
+}
+
+.required-field {
+    font-size: 0.75rem;
+    color: var(--slds-g-color-error-base-40, var(--lwc-colorTextError, rgb(234, 0, 30)));
+}
+
+.required-symbol {
+    color: var(--slds-g-color-error-base-40, var(--lwc-colorTextError, rgb(234, 0, 30)));
+    margin: 0 0.125rem;
+}
+
+.required-container {
+    display: flex;
+    flex-direction: row;
+}

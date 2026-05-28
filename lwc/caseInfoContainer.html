@@ -1,0 +1,136 @@
+<template>
+    <lightning-card>
+        <c-account-info-container
+            account-info={accountInfo}
+            current-stored-premise={currentStoredPremise}
+            onaccountinfochange={handleAccountInfoChange}
+            onaddresschange={handleOnAddressChange}
+        ></c-account-info-container>
+        <c-product-installed-container if:false={accountInfo.casoResumido}
+            product-info={productInfo}
+            onproductinfochange={handleProductInfoChange}
+            onrecordtypeforcasechange={handleRecordTypeForCaseChange}
+        ></c-product-installed-container>
+        <div style="padding: 16px;">
+            <fieldset style="border: 1px solid #000000; padding: 16px; border-radius: 8px; margin: 4px 0;">
+                <legend style="font-weight: bold; color: #000000;">{labels.LWC_Case_CaseInformation}</legend>
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col slds-size_1-of-2">
+                        <lightning-combobox  
+                            required 
+                            label="Canal" 
+                            name="canal"
+                            data-name="Origin"
+                            value={Case.Origin} 
+                            options={origin}
+                            onblur={validateRequiredField} 
+                            onchange={handleInputChange}>
+                        </lightning-combobox >
+                    </div>
+                    <div class="slds-col slds-size_1-of-2">
+                        <lightning-combobox 
+                            required
+                            label={labels.LWC_Case_CaseStatus}
+                            name="statusCase" 
+                            data-name="status_do_caso__c"
+                            value={Case.status_do_caso__c} 
+                            options={caseStatusOptions} 
+                            onblur={validateRequiredField}
+                            onchange={handleInputChange}>
+                        </lightning-combobox>
+                    </div>
+                </div>
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col slds-size_1-of-2">
+                        <lightning-combobox 
+                            required
+                            label={labels.LWC_Case_responsible} 
+                            name="responsavel" 
+                            data-name="Equipe__c"
+                            value={Case.Equipe__c} 
+                            options={responsableTeamOptions}
+                            onblur={validateRequiredField}
+                            onchange={handleInputChange}>
+                        </lightning-combobox>
+                    </div>
+                    <div class="slds-col slds-size_1-of-2">
+                        <lightning-combobox 
+                            required
+                            label={labels.LWC_Case_responsibleArea} 
+                            name="areaResponsavel" 
+                            data-name="ResponsibleSector__c"
+                            value={Case.ResponsibleSector__c} 
+                            options={responsableSectorOptions}
+                            onblur={validateRequiredField}
+                            onchange={handleInputChange}>
+                        </lightning-combobox>
+                    </div>
+                </div>
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col slds-size_1-of-2" if:true={accountInfo.casoResumido}>
+                        <div class="lookup-spacing"></div>
+                        <label class="lookup-label">{labels.LWC_Case_Product}</label>
+                        <c-lookup
+                            data-name="UsualProductLookup"
+                            onsearch={handleProductSearch}
+                            selection={selectedUsualProduct}
+                            onselectionchange={handleProductSelectionChange}
+                            onblur={validateRequiredField} 
+                            min-search-term-length=3
+                            scroll-after-n-items=5
+                        ></c-lookup>
+                    </div>
+                    <div class="slds-col slds-size_1-of-2">
+                        <lightning-textarea  
+                            required
+                            label={labels.LWC_Case_Initial_Consumer_Report}
+                            name="relatoInicial" 
+                            data-name="InitialCustomerReport__c"
+                            value={Case.InitialCustomerReport__c} 
+                            onblur={validateRequiredField}
+                            onchange={handleInputChange}>
+                        </lightning-textarea>
+                    </div>
+                </div>
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col slds-size_1-of-2" if:false={accountInfo.casoResumido}>
+                        <lightning-input 
+                            type="date" 
+                            label={labels.LWC_Case_Return_Date} 
+                            name="dataRetorno" 
+                            value={recebimento} 
+                            onchange={handleRecebimento}>
+                        </lightning-input>
+                    </div>
+                    <div class="slds-col slds-size_1-of-2" if:true={accountInfo.casoResumido}>
+                        <lightning-combobox 
+                            required
+                            label={labels.LWC_Case_Reason} 
+                            name="motivoEncerramento" 
+                            data-name="Motivo_de_encerramento__c"
+                            value={Case.Motivo_de_encerramento__c} 
+                            options={reasonForCloseSelector}
+                            onblur={validateRequiredField}
+                            onchange={handleInputChange}>
+                        </lightning-combobox>
+                    </div>
+                    
+                </div>
+
+            </fieldset>
+        </div>
+        <template lwc:if={isInitialLoading}>
+            <div class="spinner" if:true={isInitialLoading}>
+                <lightning-spinner alternative-text="Loading" size="xx-small"></lightning-spinner>
+            </div>
+        </template>
+        <div class="slds-m-top_medium slds-text-align_center">
+            <lightning-button label="Cancelar" onclick={handleCencel} style="margin-right: 10px;"></lightning-button>
+            <lightning-button label="Guardar" onclick={handleSaveTreeCase} disabled={_isSaveDisabled} ></lightning-button>
+        </div>
+
+    </lightning-card>
+
+    
+    
+</template>

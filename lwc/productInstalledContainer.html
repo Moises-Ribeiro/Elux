@@ -1,0 +1,115 @@
+<template>
+    <lightning-card>
+        <div style="padding: 16px;">
+            <fieldset style="border: 1px solid #000000; padding: 16px; border-radius: 8px; margin: 4px 0;">
+                <legend style="font-weight: bold; color: #000000;">{labels.LWC_ProductInstalled_InformacionProdInstalled}</legend>
+                    <div class="slds-grid slds-gutters">
+                        <div class="slds-col slds-size_1-of-2">
+                            <div class="lookup-spacing"></div>
+                            <div class="required-container">
+                                <label class="required-symbol">*</label>
+                                <label class="lookup-label">{labels.LWC_ProductInstalled_ModeloUsual}</label>
+                            </div>
+                            <c-lookup
+                                required
+                                data-name="UsualProductLookup"
+                                onsearch={handleProductSearch}
+                                selection={selectedUsualProduct}
+                                onselectionchange={handleProductSelectionChange}
+                                message-when-value-missing={missingUsualProductNameMessageError}
+                                errors={missingUsualProductNameErrors}
+                                min-search-term-length=3
+                                scroll-after-n-items=5
+                            ></c-lookup>
+                            <template if:true={_hasMissingUsualProductError}>
+                                <div class="required-field">{labels.LWC_GENERIC_REQUIRED_FIELD}</div>
+                            </template>
+                        </div>
+                        <div class="slds-col slds-size_1-of-2">
+                            <lightning-combobox 
+                                required
+                                label={labels.LWC_ProductInstalled_Status}  
+                                name="status"
+                                data-name="Status__c" 
+                                value={Installed_Product__c.Status__c}
+                                options={optionsStatus} 
+                                onblur={validateRequiredField}
+                                onchange={handleInputChange}>
+                            </lightning-combobox>
+                        </div>
+                    </div>
+                    <div class="slds-grid slds-gutters">
+                        <div class="slds-col slds-size_1-of-2">
+                            <div class="lookup-spacing"></div>
+                            <label class="lookup-label">{labels.LWC_ProductInstalled_ModeloComercial}</label>
+                            <c-lookup
+                                data-name="BusinessProductLookup"
+                                onsearch={handleProductSearch}
+                                selection={selectedBusinessProduct}
+                                onselectionchange={handleProductSelectionChange}
+                                min-search-term-length=3
+                                scroll-after-n-items=5
+                            ></c-lookup>
+                        </div>
+                        <div class="slds-col slds-size_1-of-2">
+                            <lightning-record-picker
+                                    label={labels.LWC_ProductInstalled_Revendedor}  
+                                    object-api-name="Account"
+                                    placeholder="Digite para pesquisar uma linha..."
+                                    display-field-name="name"
+                                    onchange={handleDealer} 
+                                    value={dealer}>
+                            </lightning-record-picker>
+                        </div>
+                    </div>
+                    <div class="slds-grid slds-gutters">
+                        <div class="slds-col slds-size_1-of-2">
+                            <lightning-input 
+                                type="date" 
+                                label={labels.LWC_ProductInstalled_Fecha_NF_Compra}
+                                name="dataCompraNF" 
+                                value={dataCompraNF}  
+                                onchange={handleCompraNF}>
+                            </lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_1-of-2">
+                            <lightning-input 
+                                label={labels.LWC_ProductInstalled_Numero_Serie}
+                                name="numSerie" 
+                                data-name="Serial_Lot_Number__c"
+                                value={Installed_Product__c.Serial_Lot_Number__c} 
+                                onchange={handleInputChange}>
+                            </lightning-input>
+                        </div>
+                    </div>
+                    <div class="slds-grid slds-gutters">
+                        <div class="slds-col slds-size_1-of-2">
+                            <lightning-input  
+                                label={labels.LWC_ProductInstalled_Numero_NF}
+                                name="numeroNF" 
+                                data-name="Numero_da_NF__c"
+                                value={Installed_Product__c.Numero_da_NF__c} 
+                                onchange={handleInputChange}>
+                            </lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_1-of-2">
+                            <lightning-combobox 
+                                required
+                                label={labels.LWC_ProductInstalled_Tensao} 
+                                name="tensão" 
+                                data-name="Tensao__c"
+                                value={Installed_Product__c.Tensao__c} 
+                                options={optionsTension} 
+                                onblur={validateRequiredField}
+                                onchange={handleInputChange}>
+                            </lightning-combobox>
+                        </div>
+                    </div>
+            </fieldset>
+        </div>
+
+    </lightning-card>
+        
+
+    
+</template>
